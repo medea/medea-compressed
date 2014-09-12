@@ -1,0 +1,19 @@
+{
+  "name": "medea-compressed",
+  "version": "0.0.0",
+  "description": "A medea-module to save/read the values compressed",
+  "main": "medea-compressed.js",
+  "scripts": {
+    "test": "tape test.js"
+  },
+  "author": "David Björklund <david.bjorklund@gmail.com> (http://davidbjorklund.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "medea": "^0.1.0",
+    "rimraf": "^2.2.8",
+    "tape": "^2.13.4"
+  },
+  "dependencies": {
+    "after": "^0.8.1"
+  }
+}
