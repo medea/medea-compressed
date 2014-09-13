@@ -66,3 +66,15 @@ test('batch', function (t) {
     })
   })
 })
+
+test('can get raw data also', function (t) {
+  inner.put('bing', 'bong', function (err) {
+    t.error(err)
+
+    db.get('bing', function (err, value) {
+      t.error(err)
+      t.equal(value.toString(), 'bong')
+      t.end()
+    })
+  })
+})

@@ -9,6 +9,14 @@ var after = require('after')
       this.db = db
     }
 
+    // borrowed from https://github.com/mafintosh/gunzip-maybe
+  , isGzipped = function(data) {
+      if (data.length < 10) return false // gzip header is 10 bytes
+      if (data[0] !== 0x1f && data[1] !== 0x8b) return false // gzip magic bytes
+      if (data[2] !== 8) return false // is deflating
+      return true
+    }
+
 MedeaCompressed.prototype.get = function (key, snapshot, callback) {
   if (!callback) {
     callback = snapshot
@@ -22,7 +30,10 @@ MedeaCompressed.prototype.get = function (key, snapshot, callback) {
     if (!data)
       return callback()
 
-    zlib.gunzip(data, callback)
+    if (isGzipped(data))
+      zlib.gunzip(data, callback)
+    else
+      callback(null, data)
   })
 }
 
