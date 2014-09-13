@@ -16,15 +16,19 @@ var after = require('after')
       if (data[2] !== 8) return false // is deflating
       return true
     }
+
+  , maybeGunzip = function (data, callback) {
+      if (isGzipped(data))
+        zlib.gunzip(data, callback)
+      else
+        callback(null, data)
+    }
+
   , maybeGzip = function (data, callback) {
       zlib.gzip(data, function (err, zipped) {
-        if (err)
-          return callback(err)
+        if (err) return callback(err)
 
-        if (zipped.length < data.length)
-          return callback(null, zipped)
-
-        callback(null, data)
+        callback(null, zipped.length < data.length ? zipped : data)
       })
     }
 
@@ -35,16 +39,11 @@ MedeaCompressed.prototype.get = function (key, snapshot, callback) {
   }
 
   this.db.get(key, snapshot, function (err, data) {
-    if (err)
-      return callback(err)
+    if (err) return callback(err)
 
-    if (!data)
-      return callback()
+    if (!data) return callback()
 
-    if (isGzipped(data))
-      zlib.gunzip(data, callback)
-    else
-      callback(null, data)
+    maybeGunzip(data, callback)
   })
 }
 
@@ -52,8 +51,7 @@ MedeaCompressed.prototype.put = function (key, value, callback) {
   var self = this
 
   maybeGzip(value, function (err, zipped) {
-    if (err)
-      return callback(err)
+    if (err) return callback(err)
 
     self.db.put(key, zipped, callback)
   })
@@ -76,7 +74,9 @@ MedeaCompressed.prototype.createBatch = function () {
 MedeaCompressed.prototype.write = function (batch, options, callback) {
   var self = this
     , compressedOperations = new Array(batch.operations.length)
-    , done = after(batch.operations.length, function () {
+    , done = after(batch.operations.length, function (err) {
+        if (err) return callback(err)
+
         var medeaBatch = self.db.createBatch()
 
         compressedOperations.forEach(function (operation) {
