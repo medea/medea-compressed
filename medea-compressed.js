@@ -10,11 +10,22 @@ var after = require('after')
     }
 
     // borrowed from https://github.com/mafintosh/gunzip-maybe
-  , isGzipped = function(data) {
+  , isGzipped = function (data) {
       if (data.length < 10) return false // gzip header is 10 bytes
       if (data[0] !== 0x1f && data[1] !== 0x8b) return false // gzip magic bytes
       if (data[2] !== 8) return false // is deflating
       return true
+    }
+  , maybeGzip = function (data, callback) {
+      zlib.gzip(data, function (err, zipped) {
+        if (err)
+          return callback(err)
+
+        if (zipped.length < data.length)
+          return callback(null, zipped)
+
+        callback(null, data)
+      })
     }
 
 MedeaCompressed.prototype.get = function (key, snapshot, callback) {
@@ -40,7 +51,7 @@ MedeaCompressed.prototype.get = function (key, snapshot, callback) {
 MedeaCompressed.prototype.put = function (key, value, callback) {
   var self = this
 
-  zlib.gzip(value, function (err, zipped) {
+  maybeGzip(value, function (err, zipped) {
     if (err)
       return callback(err)
 
@@ -84,7 +95,7 @@ MedeaCompressed.prototype.write = function (batch, options, callback) {
       compressedOperations[index] = { type: 'remove', key: operation.key }
       done()
     } else {
-      zlib.gzip(operation.value, function (err, zipped) {
+      maybeGzip(operation.value, function (err, zipped) {
         if (err)
           return done(err)
 

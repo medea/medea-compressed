@@ -12,14 +12,35 @@ test('setup default', function (t) {
   db.open(directory, t.end.bind(t))
 })
 
-test('put & then get', function (t) {
+test('put & then get a small value', function (t) {
   db.put('beep', 'boop', function (err) {
     t.error(err)
 
     db.get('beep', function (err, value) {
       t.error(err)
       t.equal(value.toString(), 'boop')
-      t.end()
+      inner.get('beep', function (err, innerValue) {
+        t.equal(innerValue.toString(), 'boop', 'should be saved raw')
+        t.end()
+      })
+    })
+  })
+})
+
+test('put & then get a large value', function (t) {
+  var input = require('fs').readFileSync(__filename)
+
+  db.put('large', input, function (err) {
+    t.error(err)
+
+    db.get('large', function (err, value) {
+      t.error(err)
+      t.deepEqual(value, input)
+      inner.get('large', function (err, compressed) {
+        t.error(err)
+        t.ok(compressed.length < input.length, 'should be saved compressed')
+        t.end()
+      })
     })
   })
 })
