@@ -1,6 +1,6 @@
 # medea-compressed
 
-A medea-module to save/read the values compressed
+A medea-module to save/read the values compressed.
 
 [![NPM](https://nodei.co/npm/medea-compressed.png?downloads&stars)](https://nodei.co/npm/medea-compressed/)
 
@@ -39,6 +39,28 @@ db.open(function () {
 input Hej hopp
 db.get() Hej hopp
 ```
+
+## Usage
+
+### medeaCompressed(db)
+
+Wrap an existing medea-instance
+
+### .put(key, value, callback)
+
+__db.put__ will save the value in the database - similarly to hos medea works.
+
+The difference is that the `value` _might_ get compressed. If the compressed size is smaller than the original size it's saved compressed, otherwise it's saved raw.
+
+### .get(key, callback)
+
+__db.get__ will read the value from the database.
+
+If the value is compressed the value will be decompressed before being returned. medeaDown looks for the gzip-header to figure out if the value has been gzipped or not.
+
+### .close, .remove, .createSnapshot, .compact
+
+These methods will forward the the arguments to medea-instance.
 
 ## Licence
 
