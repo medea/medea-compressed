@@ -6,6 +6,8 @@ A medea-module to save/read the values compressed.
 
 [![NPM](https://nodei.co/npm-dl/medea-compressed.png)](https://nodei.co/npm/medea-compressed/)
 
+__medea-compressed__ only compresses when it saves space, and looks for the gzip-header when getting data - so you can use it with an existing medea-database!
+
 ## Installation
 
 ```
@@ -60,7 +62,7 @@ If the value is compressed the value will be decompressed before being returned.
 
 ### .close, .remove, .createSnapshot, .compact
 
-These methods will forward the the arguments to medea-instance.
+These methods will forward the arguments to medea-instance.
 
 ## Licence
 
