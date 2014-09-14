@@ -15,5 +15,16 @@
   },
   "dependencies": {
     "after": "^0.8.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/medea/medea-compressed.git"
+  },
+  "keywords": [
+    "medea"
+  ],
+  "bugs": {
+    "url": "https://github.com/medea/medea-compressed/issues"
+  },
+  "homepage": "https://github.com/medea/medea-compressed"
 }
