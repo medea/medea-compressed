@@ -6,7 +6,7 @@ A medea-module to save/read the values compressed.
 
 [![NPM](https://nodei.co/npm-dl/medea-compressed.png)](https://nodei.co/npm/medea-compressed/)
 
-__medea-compressed__ only compresses when it saves space, and looks for the gzip-header when getting data - so you can use it with an existing medea-database!
+__medea-compressed__ only compresses when it saves space - on small data or data that doesn't compress compressing it with gzip actually increases the space needed. When reading data it looks for the gzip-header and only run gunzip if the value is compressed. This means that medea-compressed is backwards compatible with medea - you can wrap medea-compressed over an existing medea-database.
 
 ## Installation
 
