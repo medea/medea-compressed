@@ -106,7 +106,7 @@ MedeaCompressed.prototype.write = function (batch, options, callback) {
   })
 }
 
-;[ 'remove', 'createSnapshot', 'compact', 'open' ].forEach(function (methodName) {
+;[ 'remove', 'createSnapshot', 'compact', 'open', 'close' ].forEach(function (methodName) {
   MedeaCompressed.prototype[methodName] = function () {
     return this.db[methodName].apply(this.db, arguments)
   }
