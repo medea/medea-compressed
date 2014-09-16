@@ -72,6 +72,11 @@ MedeaCompressed.prototype.createBatch = function () {
 }
 
 MedeaCompressed.prototype.write = function (batch, options, callback) {
+  if (!callback) {
+    callback = options
+    options = {}
+  }
+
   var self = this
     , compressedOperations = new Array(batch.operations.length)
     , done = after(batch.operations.length, function (err) {
