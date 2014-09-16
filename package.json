@@ -1,6 +1,6 @@
 {
   "name": "medea-compressed",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A medea-module to save/read the values compressed",
   "main": "medea-compressed.js",
   "scripts": {
